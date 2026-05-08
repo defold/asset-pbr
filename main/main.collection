@@ -1,2 +1,165 @@
 name: "main"
 scale_along_z: 0
+embedded_instances {
+  id: "go"
+  data: "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.7854\\n"
+  "near_z: 0.1\\n"
+  "far_z: 100.0\\n"
+  "auto_aspect_ratio: 1\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    z: 3.724609
+  }
+}
+embedded_instances {
+  id: "go1"
+  data: "embedded_components {\n"
+  "  id: \"model\"\n"
+  "  type: \"model\"\n"
+  "  data: \"mesh: \\\"/main/helmet_with_tangents.glb\\\"\\n"
+  "name: \\\"{{NAME}}\\\"\\n"
+  "materials {\\n"
+  "  name: \\\"Material_MR\\\"\\n"
+  "  material: \\\"/pbr/pbr.material\\\"\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_emissiveTexture\\\"\\n"
+  "    texture: \\\"/main/Default_emissive.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_normalTexture\\\"\\n"
+  "    texture: \\\"/main/Default_normal.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_occlusionTexture\\\"\\n"
+  "    texture: \\\"/main/Default_AO.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMetallicRoughness_baseColorTexture\\\"\\n"
+  "    texture: \\\"/main/Default_albedo.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMetallicRoughness_metallicRoughnessTexture\\\"\\n"
+  "    texture: \\\"/main/Default_metalRoughness.jpg\\\"\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "go2"
+  data: "embedded_components {\n"
+  "  id: \"light\"\n"
+  "  type: \"light\"\n"
+  "  data: \"tags: \\\"light\\\"\\n"
+  "tags: \\\"directional_light\\\"\\n"
+  "data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 0.4\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -4.334822
+    y: 0.876687
+  }
+  rotation {
+    x: -0.62173635
+    y: -0.21231622
+    z: 0.24363469
+    w: 0.71344787
+  }
+  scale3 {
+    x: 0.5328
+    y: 0.5328
+    z: 0.5328
+  }
+}
+embedded_instances {
+  id: "go3"
+  data: "embedded_components {\n"
+  "  id: \"light\"\n"
+  "  type: \"light\"\n"
+  "  data: \"tags: \\\"light\\\"\\n"
+  "tags: \\\"point_light\\\"\\n"
+  "data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 0.3019607961177826\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.4000000059604645\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.800000011920929\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 10.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 10.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 1.407487
+    y: 1.178373
+    z: 1.576694
+  }
+  scale3 {
+    x: 0.370429
+    y: 0.370429
+    z: 0.370429
+  }
+}

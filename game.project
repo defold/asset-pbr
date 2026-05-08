@@ -22,3 +22,11 @@ scale_mode = stretch
 [project]
 title = template-pbr
 
+[light]
+max_count = 8
+
+[render]
+clear_color_red = 0.25
+clear_color_green = 0.25
+clear_color_blue = 0.25
+
