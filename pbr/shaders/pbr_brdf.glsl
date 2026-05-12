@@ -1,7 +1,6 @@
 #ifndef TEMPLATE_PBR_BRDF
 #define TEMPLATE_PBR_BRDF
 
-#include "/pbr/shaders/pbr_common.glsl"
 #include "/pbr/shaders/pbr_material.glsl"
 
 vec3 fresnel_schlick(vec3 f0, vec3 f90, float v_dot_h)

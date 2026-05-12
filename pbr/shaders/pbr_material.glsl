@@ -1,8 +1,8 @@
 #ifndef TEMPLATE_PBR_MATERIAL
 #define TEMPLATE_PBR_MATERIAL
 
-#include "/pbr/shaders/pbr_common.glsl"
 #include "/pbr/shaders/pbr_inputs.glsl"
+#include "/pbr/shaders/pbr_common.glsl"
 
 uniform sampler2D PbrMaterial_normalTexture;
 uniform sampler2D PbrMaterial_occlusionTexture;
@@ -67,6 +67,31 @@ bool is_valid(vec4 value)
     return is_valid(value.x) && is_valid(value.y) && is_valid(value.z) && is_valid(value.w);
 }
 
+vec4 sample_base_color_texture()
+{
+    return texture(PbrMetallicRoughness_baseColorTexture, var_texcoord0);
+}
+
+vec4 sample_metallic_roughness_texture()
+{
+    return texture(PbrMetallicRoughness_metallicRoughnessTexture, var_texcoord0);
+}
+
+vec4 sample_normal_texture()
+{
+    return texture(PbrMaterial_normalTexture, var_texcoord0);
+}
+
+vec4 sample_occlusion_texture()
+{
+    return texture(PbrMaterial_occlusionTexture, var_texcoord0);
+}
+
+vec4 sample_emissive_texture()
+{
+    return texture(PbrMaterial_emissiveTexture, var_texcoord0);
+}
+
 PBRParams get_pbr_params()
 {
     PBRParams params;
@@ -82,6 +107,15 @@ PBRParams get_pbr_params()
     params.hasNormalTexture = pbrCommonTextures.x > 0.5;
     params.hasOcclusionTexture = pbrCommonTextures.y > 0.5;
     params.hasEmissiveTexture = pbrCommonTextures.z > 0.5;
+
+#ifdef PBR_DEBUG_NO_TEXTURES
+    params.hasBaseColorTexture = false;
+    params.hasMetallicRoughnessTexture = false;
+    params.hasNormalTexture = false;
+    params.hasOcclusionTexture = false;
+    params.hasEmissiveTexture = false;
+#endif
+
     return params;
 }
 
@@ -90,7 +124,7 @@ vec4 get_base_color(PBRParams params)
     vec4 base_color = params.baseColorFactor;
     if (params.hasBaseColorTexture)
     {
-        base_color *= to_linear(texture(PbrMetallicRoughness_baseColorTexture, var_texcoord0));
+        base_color *= to_linear(sample_base_color_texture());
     }
     return base_color * var_color;
 }
@@ -99,7 +133,7 @@ vec3 get_tangent_space_normal(PBRParams params)
 {
     if (params.hasNormalTexture)
     {
-        return normalize(texture(PbrMaterial_normalTexture, var_texcoord0).xyz * 2.0 - 1.0);
+        return normalize(sample_normal_texture().xyz * 2.0 - 1.0);
     }
     return vec3(0.0, 0.0, 1.0);
 }
@@ -124,7 +158,7 @@ MaterialInfo get_material_info(PBRParams params)
 
     if (params.hasMetallicRoughnessTexture)
     {
-        vec4 metallic_roughness = texture(PbrMetallicRoughness_metallicRoughnessTexture, var_texcoord0);
+        vec4 metallic_roughness = sample_metallic_roughness_texture();
         material.perceptualRoughness *= metallic_roughness.g;
         material.metallic *= metallic_roughness.b;
     }
@@ -142,7 +176,7 @@ float get_occlusion(PBRParams params)
 {
     if (params.hasOcclusionTexture)
     {
-        return texture(PbrMaterial_occlusionTexture, var_texcoord0).r;
+        return sample_occlusion_texture().r;
     }
     return 1.0;
 }
@@ -151,7 +185,7 @@ vec3 get_emissive(PBRParams params)
 {
     if (params.hasEmissiveTexture)
     {
-        return to_linear(texture(PbrMaterial_emissiveTexture, var_texcoord0)).rgb;
+        return to_linear(sample_emissive_texture()).rgb;
     }
     return vec3(0.0);
 }

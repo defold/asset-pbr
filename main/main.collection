@@ -6,15 +6,18 @@ embedded_instances {
   "  id: \"camera\"\n"
   "  type: \"camera\"\n"
   "  data: \"aspect_ratio: 1.0\\n"
-  "fov: 0.7854\\n"
+  "fov: 0.5\\n"
   "near_z: 0.1\\n"
-  "far_z: 100.0\\n"
+  "far_z: 7.0\\n"
   "auto_aspect_ratio: 1\\n"
   "\"\n"
   "}\n"
   ""
   position {
-    z: 3.724609
+    z: 4.658406
+  }
+  scale3 {
+    x: 1.468083
   }
 }
 embedded_instances {
@@ -53,81 +56,24 @@ embedded_instances {
   ""
 }
 embedded_instances {
-  id: "go2"
-  data: "embedded_components {\n"
-  "  id: \"light\"\n"
-  "  type: \"light\"\n"
-  "  data: \"tags: \\\"light\\\"\\n"
-  "tags: \\\"directional_light\\\"\\n"
-  "data {\\n"
-  "  struct {\\n"
-  "    fields {\\n"
-  "      key: \\\"color\\\"\\n"
-  "      value {\\n"
-  "        list {\\n"
-  "          values {\\n"
-  "            number: 1.0\\n"
-  "          }\\n"
-  "          values {\\n"
-  "            number: 1.0\\n"
-  "          }\\n"
-  "          values {\\n"
-  "            number: 1.0\\n"
-  "          }\\n"
-  "          values {\\n"
-  "            number: 1.0\\n"
-  "          }\\n"
-  "        }\\n"
-  "      }\\n"
-  "    }\\n"
-  "    fields {\\n"
-  "      key: \\\"intensity\\\"\\n"
-  "      value {\\n"
-  "        number: 0.4\\n"
-  "      }\\n"
-  "    }\\n"
-  "  }\\n"
-  "}\\n"
-  "\"\n"
-  "}\n"
-  ""
-  position {
-    x: -4.334822
-    y: 0.876687
-  }
-  rotation {
-    x: -0.62173635
-    y: -0.21231622
-    z: 0.24363469
-    w: 0.71344787
-  }
-  scale3 {
-    x: 0.5328
-    y: 0.5328
-    z: 0.5328
-  }
-}
-embedded_instances {
   id: "go3"
   data: "embedded_components {\n"
-  "  id: \"light\"\n"
-  "  type: \"light\"\n"
-  "  data: \"tags: \\\"light\\\"\\n"
-  "tags: \\\"point_light\\\"\\n"
-  "data {\\n"
+  "  id: \"point_light\"\n"
+  "  type: \"point_light\"\n"
+  "  data: \"data {\\n"
   "  struct {\\n"
   "    fields {\\n"
   "      key: \\\"color\\\"\\n"
   "      value {\\n"
   "        list {\\n"
   "          values {\\n"
-  "            number: 0.3019607961177826\\n"
+  "            number: 0.10196078568696976\\n"
   "          }\\n"
   "          values {\\n"
-  "            number: 0.4000000059604645\\n"
+  "            number: 0.20000000298023224\\n"
   "          }\\n"
   "          values {\\n"
-  "            number: 0.800000011920929\\n"
+  "            number: 0.6000000238418579\\n"
   "          }\\n"
   "          values {\\n"
   "            number: 1.0\\n"
@@ -138,13 +84,13 @@ embedded_instances {
   "    fields {\\n"
   "      key: \\\"intensity\\\"\\n"
   "      value {\\n"
-  "        number: 10.0\\n"
+  "        number: 20.0\\n"
   "      }\\n"
   "    }\\n"
   "    fields {\\n"
   "      key: \\\"range\\\"\\n"
   "      value {\\n"
-  "        number: 10.0\\n"
+  "        number: 3.68256\\n"
   "      }\\n"
   "    }\\n"
   "  }\\n"
@@ -153,13 +99,13 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1.407487
-    y: 1.178373
-    z: 1.576694
+    x: -0.221224
+    y: -0.041522
+    z: 17.685017
   }
   scale3 {
-    x: 0.370429
-    y: 0.370429
-    z: 0.370429
+    x: 7.438656
+    y: 7.438656
+    z: 7.438656
   }
 }

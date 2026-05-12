@@ -5,12 +5,19 @@
 #define LIGHT_POINT       1
 #define LIGHT_SPOT        2
 #define MAX_LIGHTS        8
+
+// Basic debug views. Enable one at a time.
+// #define PBR_DEBUG_NO_TEXTURES 1
+// #define PBR_DEBUG_LIGHTING_ONLY 1
 // #define PBR_DEBUG_LIGHT_BUFFER 1
 // #define PBR_DEBUG_VERTEX_NORMAL 1
 // #define PBR_DEBUG_SHADED_NORMAL 1
-// #define PBR_DEBUG_TANGENT 1
-// #define PBR_DEBUG_BITANGENT 1
-// #define PBR_DEBUG_TANGENT_NORMAL 1
+// #define PBR_DEBUG_MATERIAL_FACTORS 1
+// #define PBR_DEBUG_BASE_COLOR_TEXTURE 1
+// #define PBR_DEBUG_METALLIC_ROUGHNESS_TEXTURE 1
+// #define PBR_DEBUG_NORMAL_TEXTURE 1
+// #define PBR_DEBUG_OCCLUSION_TEXTURE 1
+// #define PBR_DEBUG_EMISSIVE_TEXTURE 1
 
 in highp vec4 var_position;
 in mediump vec3 var_normal;
