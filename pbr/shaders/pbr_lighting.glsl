@@ -140,8 +140,8 @@ vec3 evaluate_punctual_lighting(MaterialInfo material, vec3 n, vec3 v, vec3 frag
 
 vec3 evaluate_constant_indirect(MaterialInfo material)
 {
-    vec3 diffuse = material.diffuseColor * 0.005;
-    vec3 specular = material.f0 * 0.005 * (1.0 - 0.5 * material.perceptualRoughness);
+    vec3 diffuse = material.diffuseColor * 0.01;
+    vec3 specular = material.f0 * 0.01 * (1.0 - 0.5 * material.perceptualRoughness);
     return diffuse + specular;
 }
 

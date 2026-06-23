@@ -84,13 +84,13 @@ embedded_instances {
   "    fields {\\n"
   "      key: \\\"intensity\\\"\\n"
   "      value {\\n"
-  "        number: 20.0\\n"
+  "        number: 10.0\\n"
   "      }\\n"
   "    }\\n"
   "    fields {\\n"
   "      key: \\\"range\\\"\\n"
   "      value {\\n"
-  "        number: 3.68256\\n"
+  "        number: 1.0\\n"
   "      }\\n"
   "    }\\n"
   "  }\\n"
@@ -99,13 +99,60 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -0.221224
-    y: -0.041522
-    z: 17.685017
+    x: -1.07241
+    y: -0.542399
+    z: 0.493679
   }
   scale3 {
-    x: 7.438656
-    y: 7.438656
-    z: 7.438656
+    x: 1.9281
+    y: 1.9281
+    z: 1.9281
+  }
+}
+embedded_instances {
+  id: "go2"
+  data: "embedded_components {\n"
+  "  id: \"directional_light\"\n"
+  "  type: \"directional_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 1.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 0.922531
+    y: 0.48077
+    z: 2.048819
+  }
+  rotation {
+    x: -0.39388013
+    w: 0.9191618
   }
 }
