@@ -1,2 +1,175 @@
 name: "main"
 scale_along_z: 0
+embedded_instances {
+  id: "scene"
+  children: "camera"
+  data: "embedded_components {\n"
+  "  id: \"model\"\n"
+  "  type: \"model\"\n"
+  "  data: \"mesh: \\\"/main/content/helmet_with_tangents.glb\\\"\\n"
+  "name: \\\"{{NAME}}\\\"\\n"
+  "materials {\\n"
+  "  name: \\\"Material_MR\\\"\\n"
+  "  material: \\\"/defold-pbr/pbr.material\\\"\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_emissiveTexture\\\"\\n"
+  "    texture: \\\"/main/content/Default_emissive.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_normalTexture\\\"\\n"
+  "    texture: \\\"/main/content/Default_normal.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMaterial_occlusionTexture\\\"\\n"
+  "    texture: \\\"/main/content/Default_AO.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMetallicRoughness_baseColorTexture\\\"\\n"
+  "    texture: \\\"/main/content/Default_albedo.jpg\\\"\\n"
+  "  }\\n"
+  "  textures {\\n"
+  "    sampler: \\\"PbrMetallicRoughness_metallicRoughnessTexture\\\"\\n"
+  "    texture: \\\"/main/content/Default_metalRoughness.jpg\\\"\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "lights"
+  children: "directional_light"
+  children: "point_light"
+  data: ""
+}
+embedded_instances {
+  id: "directional_light"
+  data: "embedded_components {\n"
+  "  id: \"directional_light\"\n"
+  "  type: \"directional_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 1.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 0.922531
+    y: 0.48077
+    z: 2.048819
+  }
+  rotation {
+    x: -0.18024883
+    y: -8.2276434E-16
+    z: -3.219482E-17
+    w: 0.98362106
+  }
+}
+embedded_instances {
+  id: "point_light"
+  data: "embedded_components {\n"
+  "  id: \"point_light\"\n"
+  "  type: \"point_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 0.10196078568696976\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.20000000298023224\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.6000000238418579\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 10.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 1.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1.07241
+    y: -0.542399
+    z: 0.493679
+  }
+  scale3 {
+    x: 1.388232
+    y: 1.388232
+    z: 1.388232
+  }
+}
+embedded_instances {
+  id: "camera"
+  data: "components {\n"
+  "  id: \"vantage_component\"\n"
+  "  component: \"/vantage/vantage_component.script\"\n"
+  "  properties {\n"
+  "    id: \"use_orbital_camera\"\n"
+  "    value: \"true\"\n"
+  "    type: PROPERTY_TYPE_BOOLEAN\n"
+  "  }\n"
+  "  properties {\n"
+  "    id: \"orbital_zoom_speed\"\n"
+  "    value: \"0.1\"\n"
+  "    type: PROPERTY_TYPE_NUMBER\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.5\\n"
+  "near_z: 0.1\\n"
+  "far_z: 50.0\\n"
+  "auto_aspect_ratio: 1\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    z: 5.449262
+  }
+  scale3 {
+    x: 1.468083
+  }
+}

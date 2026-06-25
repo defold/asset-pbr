@@ -21,4 +21,20 @@ scale_mode = stretch
 
 [project]
 title = template-pbr
+dependencies#0 = https://github.com/Jhonnyg/defold-vantage/archive/refs/heads/master.zip
+
+[light]
+max_count = 8
+
+[render]
+clear_color_red = 0.25
+clear_color_green = 0.25
+clear_color_blue = 0.25
+
+[library]
+include_dirs = defold-pbr
+defold_min_version = 1.13.1
+
+[input]
+game_binding = /vantage/vantage.input_bindingc
 
