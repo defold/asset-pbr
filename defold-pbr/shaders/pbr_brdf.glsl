@@ -1,8 +1,15 @@
-#ifndef TEMPLATE_PBR_BRDF
-#define TEMPLATE_PBR_BRDF
+#ifndef DEFOLD_PBR_BRDF
+#define DEFOLD_PBR_BRDF
 
-#include "/pbr/shaders/pbr_material.glsl"
+#include "/defold-pbr/shaders/pbr_material.glsl"
 
+/*
+ * Microfacet BRDF helpers for metallic-roughness PBR.
+ *
+ * The public entry point is evaluate_brdf(), which separates diffuse and
+ * specular light so downstream lighting extensions can add to either bucket
+ * before final composition.
+ */
 vec3 fresnel_schlick(vec3 f0, vec3 f90, float v_dot_h)
 {
     float x = saturate(1.0 - v_dot_h);
@@ -41,8 +48,12 @@ vec3 brdf_specular_ggx(MaterialInfo material, float v_dot_h, float n_dot_l, floa
     return material.specularWeight * f * vis * d;
 }
 
-vec3 evaluate_brdf(MaterialInfo material, vec3 n, vec3 v, vec3 l, vec3 light_color)
+/* Evaluates one light direction and returns diffuse/specular contributions. */
+void evaluate_brdf(MaterialInfo material, vec3 n, vec3 v, vec3 l, vec3 light_color, out vec3 diffuse_light, out vec3 specular_light)
 {
+    diffuse_light = vec3(0.0);
+    specular_light = vec3(0.0);
+
     vec3 h = normalize(l + v);
     float n_dot_l = clamped_dot(n, l);
     float n_dot_v = max(abs(dot(n, v)), PBR_EPSILON);
@@ -51,12 +62,13 @@ vec3 evaluate_brdf(MaterialInfo material, vec3 n, vec3 v, vec3 l, vec3 light_col
 
     if (n_dot_l <= 0.0)
     {
-        return vec3(0.0);
+        return;
     }
 
     vec3 diffuse = brdf_lambertian(material, v_dot_h);
     vec3 specular = brdf_specular_ggx(material, v_dot_h, n_dot_l, n_dot_v, n_dot_h);
-    return light_color * n_dot_l * (diffuse + specular);
+    diffuse_light = light_color * n_dot_l * diffuse;
+    specular_light = light_color * n_dot_l * specular;
 }
 
 #endif

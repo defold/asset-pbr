@@ -1,8 +1,8 @@
-#ifndef TEMPLATE_PBR_MATERIAL
-#define TEMPLATE_PBR_MATERIAL
+#ifndef DEFOLD_PBR_MATERIAL
+#define DEFOLD_PBR_MATERIAL
 
-#include "/pbr/shaders/pbr_inputs.glsl"
-#include "/pbr/shaders/pbr_common.glsl"
+#include "/defold-pbr/shaders/pbr_inputs.glsl"
+#include "/defold-pbr/shaders/pbr_common.glsl"
 
 uniform sampler2D PbrMaterial_normalTexture;
 uniform sampler2D PbrMaterial_occlusionTexture;
@@ -11,6 +11,12 @@ uniform sampler2D PbrMaterial_emissiveTexture;
 uniform sampler2D PbrMetallicRoughness_baseColorTexture;
 uniform sampler2D PbrMetallicRoughness_metallicRoughnessTexture;
 
+/*
+ * Defold's model pipeline writes glTF metallic-roughness material properties
+ * into this uniform block. Boolean texture presence is encoded as numeric
+ * flags so projects can share one material across textured and untextured
+ * assets.
+ */
 struct PbrMetallicRoughness
 {
     vec4 baseColorFactor;
@@ -25,6 +31,14 @@ uniform PbrMaterial
     PbrMetallicRoughness pbrMetallicRoughness;
 };
 
+/*
+ * Raw material parameters plus per-fragment shading vectors.
+ *
+ * get_pbr_params() gathers material flags, texture availability, view-space
+ * normal, view direction, matching world-space vectors, and double-sided
+ * normal correction into one struct. Extension code should prefer reading
+ * this struct over sampling globals directly when possible.
+ */
 struct PBRParams
 {
     vec4 baseColorFactor;
@@ -38,8 +52,20 @@ struct PBRParams
     bool hasNormalTexture;
     bool hasOcclusionTexture;
     bool hasEmissiveTexture;
+    vec3 normal;
+    vec3 view;
+    vec3 worldPosition;
+    vec3 worldNormal;
+    vec3 worldView;
 };
 
+/*
+ * Derived material properties used by BRDF and lighting code.
+ *
+ * baseColor is linear. diffuseColor, f0, roughness, and metallic are resolved
+ * from factors and textures so lighting extensions can consume physically
+ * meaningful values without knowing how the glTF inputs were packed.
+ */
 struct MaterialInfo
 {
     vec4 baseColor;
@@ -92,6 +118,29 @@ vec4 sample_emissive_texture()
     return texture(PbrMaterial_emissiveTexture, var_texcoord0);
 }
 
+/* Returns a tangent-space normal from the normal texture, or +Z if absent. */
+vec3 get_tangent_space_normal(PBRParams params)
+{
+    if (params.hasNormalTexture)
+    {
+        return normalize(sample_normal_texture().xyz * 2.0 - 1.0);
+    }
+    return vec3(0.0, 0.0, 1.0);
+}
+
+/* Returns the final view-space normal used for all lighting calculations. */
+vec3 get_normal(PBRParams params)
+{
+    vec3 n = normalize(var_normal);
+    if (params.hasNormalTexture && var_has_tangent > 0.5)
+    {
+        vec3 tangent_normal = get_tangent_space_normal(params);
+        n = normalize(mat3(normalize(var_tangent), normalize(var_bitangent), n) * tangent_normal);
+    }
+    return n;
+}
+
+/* Builds the per-fragment parameter bundle consumed by the PBR pipeline. */
 PBRParams get_pbr_params()
 {
     PBRParams params;
@@ -107,18 +156,24 @@ PBRParams get_pbr_params()
     params.hasNormalTexture = pbrCommonTextures.x > 0.5;
     params.hasOcclusionTexture = pbrCommonTextures.y > 0.5;
     params.hasEmissiveTexture = pbrCommonTextures.z > 0.5;
+    params.view = normalize(-var_position.xyz);
+    params.normal = get_normal(params);
 
-#ifdef PBR_DEBUG_NO_TEXTURES
-    params.hasBaseColorTexture = false;
-    params.hasMetallicRoughnessTexture = false;
-    params.hasNormalTexture = false;
-    params.hasOcclusionTexture = false;
-    params.hasEmissiveTexture = false;
-#endif
+    if (params.doubleSided && dot(params.normal, params.view) < 0.0)
+    {
+        params.normal = -params.normal;
+    }
+
+    mat3 view_rotation_inverse = transpose(mat3(var_view));
+    vec3 view_translation = var_view[3].xyz;
+    params.worldPosition = view_rotation_inverse * (var_position.xyz - view_translation);
+    params.worldNormal = normalize(view_rotation_inverse * params.normal);
+    params.worldView = normalize(view_rotation_inverse * params.view);
 
     return params;
 }
 
+/* Resolves linear base color from factor, texture, and vertex color. */
 vec4 get_base_color(PBRParams params)
 {
     vec4 base_color = params.baseColorFactor;
@@ -129,26 +184,7 @@ vec4 get_base_color(PBRParams params)
     return base_color * var_color;
 }
 
-vec3 get_tangent_space_normal(PBRParams params)
-{
-    if (params.hasNormalTexture)
-    {
-        return normalize(sample_normal_texture().xyz * 2.0 - 1.0);
-    }
-    return vec3(0.0, 0.0, 1.0);
-}
-
-vec3 get_normal(PBRParams params)
-{
-    vec3 n = normalize(var_normal);
-    if (params.hasNormalTexture && var_has_tangent > 0.5)
-    {
-        vec3 tangent_normal = get_tangent_space_normal(params);
-        n = normalize(mat3(normalize(var_tangent), normalize(var_bitangent), n) * tangent_normal);
-    }
-    return n;
-}
-
+/* Resolves the BRDF-ready material values from PBRParams and textures. */
 MaterialInfo get_material_info(PBRParams params)
 {
     MaterialInfo material;
@@ -172,6 +208,7 @@ MaterialInfo get_material_info(PBRParams params)
     return material;
 }
 
+/* Returns scalar ambient occlusion. A missing occlusion texture is neutral. */
 float get_occlusion(PBRParams params)
 {
     if (params.hasOcclusionTexture)
@@ -181,6 +218,7 @@ float get_occlusion(PBRParams params)
     return 1.0;
 }
 
+/* Returns linear emissive color. A missing emissive texture is black. */
 vec3 get_emissive(PBRParams params)
 {
     if (params.hasEmissiveTexture)

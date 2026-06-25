@@ -1,6 +1,11 @@
-#ifndef TEMPLATE_PBR_COMMON
-#define TEMPLATE_PBR_COMMON
+#ifndef DEFOLD_PBR_COMMON
+#define DEFOLD_PBR_COMMON
 
+/*
+ * Common scalar, color-space, and clamping helpers shared by the PBR shader
+ * modules. The material assumes texture color data is sampled as sRGB-like
+ * input and converted to linear space before lighting.
+ */
 const float PBR_PI = 3.1415926535897932384626433832795;
 const float PBR_EPSILON = 0.00001;
 

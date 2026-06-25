@@ -1,7 +1,7 @@
 name: "pbr"
 tags: "model"
-vertex_program: "/pbr/shaders/pbr.vp"
-fragment_program: "/pbr/shaders/pbr.fp"
+vertex_program: "/defold-pbr/shaders/pbr.vp"
+fragment_program: "/defold-pbr/shaders/pbr.fp"
 vertex_space: VERTEX_SPACE_LOCAL
 vertex_constants {
   name: "mtx_worldview"

@@ -1,5 +1,12 @@
 #version 140
 
+/*
+ * Vertex setup for Defold PBR models.
+ *
+ * The fragment shader expects view-space position, normal, tangent frame, and
+ * view matrix. Tangents are optional; when unavailable the fragment shader
+ * falls back to interpolated vertex normals.
+ */
 in highp vec4 position;
 in mediump vec3 normal;
 in mediump vec4 tangent;
