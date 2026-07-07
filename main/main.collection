@@ -38,8 +38,14 @@ embedded_instances {
 }
 embedded_instances {
   id: "lights"
+  children: "ambient_light"
+  children: "blue_light"
   children: "directional_light"
-  children: "point_light"
+  children: "orange_light"
+  children: "yellow_flashlight_left"
+  children: "yellow_flashlight_right"
+  children: "yellow_helmet_light_left"
+  children: "yellow_helmet_light_right"
   data: ""
 }
 embedded_instances {
@@ -68,7 +74,7 @@ embedded_instances {
   "    fields {\\n"
   "      key: \\\"intensity\\\"\\n"
   "      value {\\n"
-  "        number: 1.0\\n"
+  "        number: 0.5\\n"
   "      }\\n"
   "    }\\n"
   "  }\\n"
@@ -77,19 +83,16 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.922531
-    y: 0.48077
-    z: 2.048819
+    x: 1.0
+    z: 1.0
   }
   rotation {
-    x: -0.18024883
-    y: -8.2276434E-16
-    z: -3.219482E-17
-    w: 0.98362106
+    x: -0.17364818
+    w: 0.9848077
   }
 }
 embedded_instances {
-  id: "point_light"
+  id: "blue_light"
   data: "embedded_components {\n"
   "  id: \"point_light\"\n"
   "  type: \"point_light\"\n"
@@ -100,13 +103,13 @@ embedded_instances {
   "      value {\\n"
   "        list {\\n"
   "          values {\\n"
-  "            number: 0.10196078568696976\\n"
+  "            number: 0.0\\n"
   "          }\\n"
   "          values {\\n"
-  "            number: 0.20000000298023224\\n"
+  "            number: 1.0\\n"
   "          }\\n"
   "          values {\\n"
-  "            number: 0.6000000238418579\\n"
+  "            number: 1.0\\n"
   "          }\\n"
   "        }\\n"
   "      }\\n"
@@ -114,13 +117,13 @@ embedded_instances {
   "    fields {\\n"
   "      key: \\\"intensity\\\"\\n"
   "      value {\\n"
-  "        number: 10.0\\n"
+  "        number: 40.0\\n"
   "      }\\n"
   "    }\\n"
   "    fields {\\n"
   "      key: \\\"range\\\"\\n"
   "      value {\\n"
-  "        number: 1.0\\n"
+  "        number: 1.5\\n"
   "      }\\n"
   "    }\\n"
   "  }\\n"
@@ -129,14 +132,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -1.07241
-    y: -0.542399
-    z: 0.493679
-  }
-  scale3 {
-    x: 1.388232
-    y: 1.388232
-    z: 1.388232
+    x: 1.2
+    z: 0.7
   }
 }
 embedded_instances {
@@ -167,9 +164,365 @@ embedded_instances {
   "}\n"
   ""
   position {
-    z: 5.449262
+    z: 5.0
   }
   scale3 {
     x: 1.468083
+  }
+}
+embedded_instances {
+  id: "orange_light"
+  data: "embedded_components {\n"
+  "  id: \"point_light\"\n"
+  "  type: \"point_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.23346303403377533\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 30.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 1.5\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1.2
+    z: 0.7
+  }
+}
+embedded_instances {
+  id: "yellow_flashlight_left"
+  data: "embedded_components {\n"
+  "  id: \"spot_light\"\n"
+  "  type: \"spot_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"inner_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 45.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 80.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"outer_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 140.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 0.4\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 0.45
+    y: 0.41
+    z: 0.34
+  }
+  rotation {
+    y: 1.0
+    w: 6.123234E-17
+  }
+  scale3 {
+    x: 1.388232
+    y: 1.388232
+    z: 1.388232
+  }
+}
+embedded_instances {
+  id: "yellow_flashlight_right"
+  data: "embedded_components {\n"
+  "  id: \"spot_light\"\n"
+  "  type: \"spot_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"inner_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 45.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 80.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"outer_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 140.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 0.4\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -0.45
+    y: 0.41
+    z: 0.34
+  }
+  rotation {
+    y: 1.0
+    w: 6.123234E-17
+  }
+  scale3 {
+    x: 1.388232
+    y: 1.388232
+    z: 1.388232
+  }
+}
+embedded_instances {
+  id: "yellow_helmet_light_right"
+  data: "embedded_components {\n"
+  "  id: \"spot_light\"\n"
+  "  type: \"spot_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"inner_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 45.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 40.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"outer_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 140.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 0.25\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -0.76
+    y: 0.39
+    z: -0.15
+  }
+  rotation {
+    x: 5.2017203E-18
+    y: 0.99638516
+    z: 0.084950544
+    w: 6.1010996E-17
+  }
+  scale3 {
+    x: 1.388232
+    y: 1.388232
+    z: 1.388232
+  }
+}
+embedded_instances {
+  id: "yellow_helmet_light_left"
+  data: "embedded_components {\n"
+  "  id: \"spot_light\"\n"
+  "  type: \"spot_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 1.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"inner_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 45.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 40.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"outer_cone_angle\\\"\\n"
+  "      value {\\n"
+  "        number: 140.0\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"range\\\"\\n"
+  "      value {\\n"
+  "        number: 0.25\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 0.76
+    y: 0.39
+    z: -0.15
+  }
+  rotation {
+    x: 5.2017203E-18
+    y: 0.99638516
+    z: 0.084950544
+    w: 6.1010996E-17
+  }
+  scale3 {
+    x: 1.388232
+    y: 1.388232
+    z: 1.388232
+  }
+}
+embedded_instances {
+  id: "ambient_light"
+  data: "embedded_components {\n"
+  "  id: \"ambient_light\"\n"
+  "  type: \"ambient_light\"\n"
+  "  data: \"data {\\n"
+  "  struct {\\n"
+  "    fields {\\n"
+  "      key: \\\"color\\\"\\n"
+  "      value {\\n"
+  "        list {\\n"
+  "          values {\\n"
+  "            number: 0.0\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.10196078568696976\\n"
+  "          }\\n"
+  "          values {\\n"
+  "            number: 0.501960813999176\\n"
+  "          }\\n"
+  "        }\\n"
+  "      }\\n"
+  "    }\\n"
+  "    fields {\\n"
+  "      key: \\\"intensity\\\"\\n"
+  "      value {\\n"
+  "        number: 0.05\\n"
+  "      }\\n"
+  "    }\\n"
+  "  }\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 1.5
+    z: 1.0
   }
 }

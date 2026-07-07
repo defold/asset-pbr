@@ -20,6 +20,8 @@ It supports metallic-roughness base color data, normal/occlusion/emissive
 textures, alpha cutoff/unlit flags, and directional/point/spot lights from
 Defold's light component buffer.
 
+![setup](setup.png)
+
 Image based lighting and additional glTF material extensions are intentionally
 left out of this base asset. Extension projects can include these shaders and
 inject extra lighting into `PBRLightData` before final composition.
