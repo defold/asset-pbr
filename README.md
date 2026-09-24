@@ -13,7 +13,6 @@ Base PBR material and programs:
 - `/defold-pbr/pbr.material`
 - `/defold-pbr/shaders/pbr.vp`
 - `/defold-pbr/shaders/pbr.fp`
-- `/defold-pbr/pbr_transmission.material` (transmission render-pass tag)
 - `/defold-pbr/shaders/pbr_transmission.glsl` (transmission composition helper)
 
 The shader uses Defold model PBR constants from the `PbrMaterial` uniform block
@@ -26,8 +25,8 @@ and directional/point/spot lights from Defold's light component buffer.
 
 Image based lighting is left to extension projects. Extension projects can
 include these shaders and inject extra lighting into `PBRLightData` before final
-composition. Both supplied materials use the same `pbr.fp`; their names and
-render tags distinguish the opaque and transmission passes.
+composition. The supplied `pbr.material` supports all of these features;
+projects configure material tags to select their render passes.
 
 ## Installing In A Project
 
@@ -155,12 +154,21 @@ void main()
 
 ## Transmission and Volume Attenuation
 
-Assign `/defold-pbr/pbr_transmission.material` to transmissive glTF materials and
-keep opaque geometry, including the backdrop, on `/defold-pbr/pbr.material`.
-Both materials use `pbr.fp` and the same shader bindings. The transmission
-material differs only in name and its `model_transmission` tag, allowing it to
-be drawn after the opaque scene is captured. The backdrop is ordinary collection
-content; no particular grid or model is built into the shader or renderer.
+`/defold-pbr/pbr.material` already includes the shader and bindings needed for
+transmission. Configure the material tags in your project to draw transmissive
+geometry after the opaque scene is captured. For the render script below:
+
+1. Keep opaque geometry, including the backdrop, on `/defold-pbr/pbr.material`,
+   which uses the `model` tag.
+2. Copy that material into your project, for example `/materials/glass.material`,
+   and replace its `model` tag with `model_transmission`. Keep `pbr.vp`, `pbr.fp`,
+   constants, and samplers unchanged.
+3. Assign the project material to transmissive glTF materials. Do not retain the
+   `model` tag on it, since that would also include glass in the opaque capture.
+
+The project material selects a render pass; transmission itself is driven by
+the imported glTF data. The backdrop is ordinary collection content; no
+particular grid or model is built into the shader or renderer.
 
 The shader reads the imported `KHR_materials_transmission`, `KHR_materials_volume`,
 and `KHR_materials_ior` values. It supports base-color tint, IOR, thickness factor,
@@ -240,12 +248,13 @@ out_fragColor = vec4(to_output(color), 1.0);
 ```
 
 Use the same extension fragment shader for opaque and transmissive materials.
-Retain the respective `model`/`model_transmission` tags, the
-`mtx_world`/`mtx_projection` fragment constants, and transmission samplers from
-the base materials, then add the IBL samplers. Keep those environment textures
-bound for both opaque and glass draws. Exposure applies to local lighting only; the captured background
-has already been exposed. Existing IBL materials must opt into this helper;
-updating the dependency alone does not change their fragment shader.
+Configure the project materials with the respective `model`/`model_transmission`
+tags. Retain the `mtx_world`/`mtx_projection` fragment constants and transmission
+samplers from `pbr.material`, then add the IBL samplers. Keep those environment
+textures bound for both opaque and glass draws. Exposure applies to local
+lighting only; the captured background has already been exposed. Existing IBL
+materials must opt into this helper; updating the dependency alone does not
+change their fragment shader.
 
 ### Limits
 
