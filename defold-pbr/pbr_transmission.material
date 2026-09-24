@@ -1,7 +1,7 @@
 name: "pbr_transmission"
 tags: "model_transmission"
 vertex_program: "/defold-pbr/shaders/pbr.vp"
-fragment_program: "/defold-pbr/shaders/pbr_transmission.fp"
+fragment_program: "/defold-pbr/shaders/pbr.fp"
 vertex_space: VERTEX_SPACE_LOCAL
 vertex_constants {
   name: "mtx_worldview"

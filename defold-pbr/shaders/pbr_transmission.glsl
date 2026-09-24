@@ -1,7 +1,6 @@
 #ifndef DEFOLD_PBR_TRANSMISSION
 #define DEFOLD_PBR_TRANSMISSION
 
-// Define PBR_TRANSMISSION in the root fragment shader before including this file.
 #include "/defold-pbr/shaders/pbr_lighting.glsl"
 
 uniform pbr_transmission_uniforms
@@ -32,13 +31,19 @@ vec3 volume_transmittance(float distance_travelled)
 vec3 composite_pbr_transmission(PBRParams params, MaterialInfo material, PBRLightData light, float exposure)
 {
     float transmission = pbrTransmission.transmissionFactor.x;
+    // Opaque and unlit materials do not need transmission textures or scene color.
+    if (transmission <= 0.0 || params.unlit || material.metallic >= 1.0)
+    {
+        return composite_pbr_light_data(light) * exposure;
+    }
+
     if (pbrTransmission.transmissionTextures.x > 0.5)
     {
         transmission *= texture(PbrTransmission_transmissionTexture, var_texcoord0).r;
     }
     transmission = clamp(transmission, 0.0, 1.0) * (1.0 - material.metallic);
 
-    if (transmission <= 0.0 || params.unlit)
+    if (transmission <= 0.0)
     {
         return composite_pbr_light_data(light) * exposure;
     }

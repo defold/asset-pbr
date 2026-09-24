@@ -13,20 +13,21 @@ Base PBR material and programs:
 - `/defold-pbr/pbr.material`
 - `/defold-pbr/shaders/pbr.vp`
 - `/defold-pbr/shaders/pbr.fp`
-- `/defold-pbr/pbr_transmission.material` (smooth glass)
+- `/defold-pbr/pbr_transmission.material` (transmission render-pass tag)
 - `/defold-pbr/shaders/pbr_transmission.glsl` (transmission composition helper)
 
 The shader uses Defold model PBR constants from the `PbrMaterial` uniform block
 and binds glTF textures by the sampler names populated by the model component.
 It supports metallic-roughness base color data, normal/occlusion/emissive
-textures, alpha cutoff/unlit flags, and directional/point/spot lights from
-Defold's light component buffer.
+textures, alpha cutoff/unlit flags, IOR, smooth transmission, volume attenuation,
+and directional/point/spot lights from Defold's light component buffer.
 
 ![setup](setup.png)
 
-Image based lighting is left to extension projects. The optional transmission
-material adds glTF transmission, volume attenuation, and IOR. Extension projects can include these shaders and
-inject extra lighting into `PBRLightData` before final composition.
+Image based lighting is left to extension projects. Extension projects can
+include these shaders and inject extra lighting into `PBRLightData` before final
+composition. Both supplied materials use the same `pbr.fp`; their names and
+render tags distinguish the opaque and transmission passes.
 
 ## Installing In A Project
 
@@ -57,6 +58,8 @@ PbrMetallicRoughness_metallicRoughnessTexture
 PbrMaterial_normalTexture
 PbrMaterial_occlusionTexture
 PbrMaterial_emissiveTexture
+PbrTransmission_transmissionTexture
+PbrVolume_thicknessTexture
 ```
 
 The material expects the standard Defold PBR material constants:
@@ -64,6 +67,9 @@ The material expects the standard Defold PBR material constants:
 ```glsl
 PbrMaterial
 PbrMetallicRoughness
+PbrTransmission
+PbrVolume
+PbrIor
 ```
 
 These are normally populated by the model component when using imported glTF
@@ -99,7 +105,10 @@ render.enable_state(graphics.STATE_CULL_FACE)
 render.draw(self.model_predicate, camera.frustum)
 ```
 
-No custom PBR light constants are required by this asset.
+No custom PBR light constants are required by this asset. Opaque models with
+zero transmission do not sample transmission textures or scene color, so they
+can use this ordinary draw path without a scene capture. Transmissive models
+require the additional render passes described below.
 
 ## Extending The Shader
 
@@ -112,7 +121,7 @@ MaterialInfo material = get_material_info(params);
 PBRLightData pbr_data = calculate_pbr_light_data(params, material, var_position.xyz);
 pbr_data.specular += calculate_custom_specular(params, material);
 
-vec3 color = composite_pbr_light_data(pbr_data);
+vec3 color = composite_pbr_transmission(params, material, pbr_data, 1.0);
 ```
 
 Useful extension points:
@@ -125,11 +134,11 @@ Useful extension points:
   extension shaders can add image based lighting or other terms before
   compositing.
 
-An extension fragment shader can include the base lighting file and add its own
-lighting before calling `composite_pbr_light_data()`:
+An extension fragment shader can include the shared composition helper and add
+its own lighting before calling `composite_pbr_transmission()`:
 
 ```glsl
-#include "/defold-pbr/shaders/pbr_lighting.glsl"
+#include "/defold-pbr/shaders/pbr_transmission.glsl"
 
 void main()
 {
@@ -139,7 +148,8 @@ void main()
     PBRLightData data = calculate_pbr_light_data(params, material, var_position.xyz);
     add_pbr_light_data(data, calculate_extra_light_data(params, material));
 
-    out_fragColor = vec4(to_output(composite_pbr_light_data(data)), data.alpha);
+    vec3 color = composite_pbr_transmission(params, material, data, 1.0);
+    out_fragColor = vec4(to_output(color), data.alpha);
 }
 ```
 
@@ -147,9 +157,10 @@ void main()
 
 Assign `/defold-pbr/pbr_transmission.material` to transmissive glTF materials and
 keep opaque geometry, including the backdrop, on `/defold-pbr/pbr.material`.
-The glass material uses the `model_transmission` tag so it can be drawn after the
-opaque scene is captured. The backdrop is ordinary collection content; no
-particular grid or model is built into the shader or renderer.
+Both materials use `pbr.fp` and the same shader bindings. The transmission
+material differs only in name and its `model_transmission` tag, allowing it to
+be drawn after the opaque scene is captured. The backdrop is ordinary collection
+content; no particular grid or model is built into the shader or renderer.
 
 The shader reads the imported `KHR_materials_transmission`, `KHR_materials_volume`,
 and `KHR_materials_ior` values. It supports base-color tint, IOR, thickness factor,
@@ -164,7 +175,10 @@ PbrVolume_thicknessTexture
 These textures contain linear data. Keep the imported sampler bindings and use
 white fallback textures when absent. Defold must supply the corresponding glTF
 constants and texture bindings; generated thickness bindings require the importer
-support tracked in [defold/defold#13050](https://github.com/defold/defold/issues/13050).
+support in [defold/defold#13303](https://github.com/defold/defold/pull/13303), on
+the [`codex/gltf-attenuation`](https://github.com/defold/defold/tree/codex/gltf-attenuation)
+branch. IOR is also applied to non-transmissive dielectric materials; it does
+not require a transmission feature define.
 
 ### Render Passes
 
@@ -209,11 +223,10 @@ must adapt this conversion.
 
 This asset provides transmission with Defold lights; it does not provide an IBL
 environment. An IBL extension such as `defold-pbr` can use the same transmission
-helper without copying the base shaders. Define `PBR_TRANSMISSION` in the root
-fragment shader before its includes, then compose after adding IBL:
+helper without copying the base shaders. Include the helper in the extension
+fragment shader and compose after adding IBL:
 
 ```glsl
-#define PBR_TRANSMISSION
 #include "/defold-pbr/shaders/pbr_transmission.glsl"
 // Include the extension's IBL helpers here.
 
@@ -226,10 +239,11 @@ vec3 color = composite_pbr_transmission(params, material, light, exposure);
 out_fragColor = vec4(to_output(color), 1.0);
 ```
 
-Base an IBL glass material on `pbr_transmission.material`, retaining its tag,
-`mtx_world`/`mtx_projection` fragment constants, and transmission samplers, then
-add the IBL samplers. Keep those environment textures bound for both opaque and
-glass draws. Exposure applies to local lighting only; the captured background
+Use the same extension fragment shader for opaque and transmissive materials.
+Retain the respective `model`/`model_transmission` tags, the
+`mtx_world`/`mtx_projection` fragment constants, and transmission samplers from
+the base materials, then add the IBL samplers. Keep those environment textures
+bound for both opaque and glass draws. Exposure applies to local lighting only; the captured background
 has already been exposed. Existing IBL materials must opt into this helper;
 updating the dependency alone does not change their fragment shader.
 
