@@ -13,7 +13,7 @@ Base PBR material and programs:
 - `/defold-pbr/pbr.material`
 - `/defold-pbr/shaders/pbr.vp`
 - `/defold-pbr/shaders/pbr.fp`
-- `/defold-pbr/shaders/pbr_transmission.glsl` (transmission composition helper)
+- `/defold-pbr/shaders/pbr_lighting.glsl` (light accumulation and final composition)
 
 The shader uses Defold model PBR constants from the `PbrMaterial` uniform block
 and binds glTF textures by the sampler names populated by the model component.
@@ -133,11 +133,14 @@ Useful extension points:
   extension shaders can add image based lighting or other terms before
   compositing.
 
-An extension fragment shader can include the shared composition helper and add
-its own lighting before calling `composite_pbr_transmission()`:
+An extension fragment shader can include `pbr_lighting.glsl` and add its own
+lighting before calling `composite_pbr_transmission()`. This include provides
+light accumulation, transmission, and volume attenuation:
 
 ```glsl
-#include "/defold-pbr/shaders/pbr_transmission.glsl"
+in mediump mat4 var_view;
+#define MAX_LIGHT_COUNT 8
+#include "/defold-pbr/shaders/pbr_lighting.glsl"
 
 void main()
 {
@@ -230,12 +233,14 @@ must adapt this conversion.
 ### Adding IBL
 
 This asset provides transmission with Defold lights; it does not provide an IBL
-environment. An IBL extension such as `defold-pbr` can use the same transmission
-helper without copying the base shaders. Include the helper in the extension
-fragment shader and compose after adding IBL:
+environment. An IBL extension such as `defold-pbr` can include `pbr_lighting.glsl`
+without copying the base shaders. Compose after adding IBL so that transmission
+also applies to the accumulated indirect lighting:
 
 ```glsl
-#include "/defold-pbr/shaders/pbr_transmission.glsl"
+in mediump mat4 var_view;
+#define MAX_LIGHT_COUNT 8
+#include "/defold-pbr/shaders/pbr_lighting.glsl"
 // Include the extension's IBL helpers here.
 
 // Inside main():
@@ -253,8 +258,8 @@ tags. Retain the `mtx_world`/`mtx_projection` fragment constants and transmissio
 samplers from `pbr.material`, then add the IBL samplers. Keep those environment
 textures bound for both opaque and glass draws. Exposure applies to local
 lighting only; the captured background has already been exposed. Existing IBL
-materials must opt into this helper; updating the dependency alone does not
-change their fragment shader.
+materials must call `composite_pbr_transmission()` after adding IBL; updating
+the dependency alone does not change their composition call.
 
 ### Limits
 

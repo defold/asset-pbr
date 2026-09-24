@@ -3,7 +3,7 @@
 in mediump mat4 var_view;
 
 #define MAX_LIGHT_COUNT 8
-#include "/defold-pbr/shaders/pbr_transmission.glsl"
+#include "/defold-pbr/shaders/pbr_lighting.glsl"
 
 void main()
 {
