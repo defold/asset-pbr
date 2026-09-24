@@ -24,11 +24,35 @@ struct PbrMetallicRoughness
     vec4 metallicRoughnessTextures;
 };
 
+uniform sampler2D PbrTransmission_transmissionTexture;
+uniform sampler2D PbrVolume_thicknessTexture;
+
+struct PbrTransmission
+{
+    vec4 transmissionFactor;
+    vec4 transmissionTextures;
+};
+
+struct PbrVolume
+{
+    vec4 thicknessFactorAndAttenuationColor;
+    vec4 attenuationDistance;
+    vec4 volumeTextures;
+};
+
+struct PbrIor
+{
+    vec4 ior;
+};
+
 uniform PbrMaterial
 {
     vec4 pbrAlphaCutoffAndDoubleSidedAndIsUnlit;
     vec4 pbrCommonTextures;
     PbrMetallicRoughness pbrMetallicRoughness;
+    PbrTransmission pbrTransmission;
+    PbrVolume pbrVolume;
+    PbrIor pbrIor;
 };
 
 /*
@@ -201,7 +225,9 @@ MaterialInfo get_material_info(PBRParams params)
 
     material.perceptualRoughness = clamp(material.perceptualRoughness, 0.04, 1.0);
     material.alphaRoughness = material.perceptualRoughness * material.perceptualRoughness;
-    material.f0 = mix(vec3(0.04), material.baseColor.rgb, material.metallic);
+    float ior = pbrIor.ior.x >= 1.0 ? pbrIor.ior.x : 1.5;
+    float dielectric_f0 = (ior - 1.0) / (ior + 1.0);
+    material.f0 = mix(vec3(dielectric_f0 * dielectric_f0), material.baseColor.rgb, material.metallic);
     material.f90 = vec3(1.0);
     material.diffuseColor = material.baseColor.rgb * (1.0 - material.metallic);
     material.specularWeight = 1.0;
